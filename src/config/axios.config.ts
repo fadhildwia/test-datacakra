@@ -8,9 +8,14 @@ const defaultOptions: AxiosRequestConfig = {
 export const axiosInstance = axios.create(defaultOptions)
 
 export const axiosInterceptorRequest = async (requestConfig: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('token');
+  const storedState = localStorage.getItem("auth-store");
 
-  if (requestConfig.headers && token) {
+  if (!storedState) return requestConfig;
+
+  const parsedState = JSON.parse(storedState);
+  const token = parsedState?.state?.token;
+
+  if (requestConfig.headers && token && !requestConfig.url?.includes('/api/auth/local')) {
     requestConfig.headers.Authorization = `Bearer ${token}`;
   }
 

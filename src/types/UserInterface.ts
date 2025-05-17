@@ -14,7 +14,7 @@ export interface ErrorInterface<D> {
   error: D
 }
 
-export interface userInterface {
+export interface UserInterface {
   id: number
   documentId: string
   username: string
@@ -26,17 +26,5 @@ export interface userInterface {
 
 export interface ResponseLoginInterface {
   jwt: string
-  user: userInterface
-}
-
-export interface ResponseArticleInterface {
-  cover_image_url: string
-  createdAt: string
-  description: string
-  documentId: string
-  id: number
-  locale: string
-  publishedAt: string
-  title: string
-  updatedAt: string
+  user: UserInterface
 }

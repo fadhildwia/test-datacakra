@@ -1,7 +1,7 @@
 import { useMutation, type UseMutationOptions } from "@tanstack/react-query"
 import { axiosInstance } from "../config/axios.config"
 import { AxiosError } from "axios"
-import type { BodyRegisterInterface, ErrorInterface, ResponseLoginInterface } from "../types/userInterface"
+import type { BodyRegisterInterface, ResponseLoginInterface } from "../types/UserInterface"
 
 export const postUserRegister = async (
   body: BodyRegisterInterface

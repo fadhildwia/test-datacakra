@@ -11,3 +11,8 @@ interface MetaResponseInterface {
   pageSize?: string;
   total?: number;
 }
+
+interface ErrorInterface<D> {
+  data: string;
+  error: D;
+}
