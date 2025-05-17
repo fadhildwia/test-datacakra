@@ -14,14 +14,14 @@ const NavLinks = ({ isMobile = false, onLinkClick }: { isMobile?: boolean, onLin
   
   return (
     <>
-      <NavLink to="/" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-foreground/70'}`} onClick={onLinkClick}>Home</NavLink>
-      <NavLink to="/articles" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-foreground/70'}`} onClick={onLinkClick}>Articles</NavLink>
-      <NavLink to="/categories" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-foreground/70'}`} onClick={onLinkClick}>Categories</NavLink>
-        <Button variant="ghost" onClick={handleLogout} className={`${commonLinkClass} text-foreground/70`}>Logout</Button>
+      <NavLink to="/" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-primary-foreground/70'}`} onClick={onLinkClick}>Home</NavLink>
+      <NavLink to="/articles" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-primary-foreground/70'}`} onClick={onLinkClick}>Articles</NavLink>
+      <NavLink to="/categories" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-primary-foreground/70'}`} onClick={onLinkClick}>Categories</NavLink>
+        <Button variant="ghost" onClick={handleLogout} className={`${commonLinkClass} text-primary-foreground/70`}>Logout</Button>
         <>
-          <NavLink to="/login" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-foreground/70'}`} onClick={onLinkClick}>Login</NavLink>
+          <NavLink to="/login" className={({ isActive }) => `${commonLinkClass} ${isActive ? activeLinkClass : 'text-primary-foreground/70'}`} onClick={onLinkClick}>Login</NavLink>
           <NavLink to="/register" onClick={onLinkClick}>
-            <Button size={isMobile ? "lg" : "sm"} className="w-full md:w-auto">Register</Button>
+            <Button size={isMobile ? "lg" : "sm"} className="w-full md:w-auto text-foreground">Register</Button>
           </NavLink>
         </>
     </>
@@ -34,10 +34,10 @@ export const Navbar = () => {
   const closeMobile = () => setMobileOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b flex items-center justify-center border-border px-6 sm:px-0">
+    <header className="sticky top-0 z-50 w-full border-b flex items-center justify-center border-border px-6 sm:px-0 bg-background-foreground">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-poppins text-xl font-semibold">Travel Apps</span>
+          <span className="font-poppins text-xl text-primary-foreground font-semibold">Travel Apps</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
