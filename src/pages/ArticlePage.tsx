@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Search } from "lucide-react";
 import ArticleCard from "../components/ArticleCard";
 import useGetArticleList from "../hooks/useGetArticleList";
-import CreateArticleForm from "../components/CreateArticleForm";
+import CreateUpdateArticleForm from "../components/CreateUpdateArticleForm";
 import Loader from "../components/loader";
 
 export const ArticlePage = () => {
@@ -37,7 +37,7 @@ export const ArticlePage = () => {
               <span className="hidden md:inline text-foreground">Search</span>
             </Button>
           </div>
-          <CreateArticleForm onArticleCreated={() => refetch()} />
+          <CreateUpdateArticleForm onArticleCreated={() => refetch()} />
         </div>
 
         {articleList?.data?.length ? (

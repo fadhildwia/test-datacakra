@@ -28,6 +28,7 @@ import useDeleteArticle from "../hooks/useDeleteArticle"
 import useDeleteComment from "../hooks/useDeleteComment"
 import usePostCreateComment from "../hooks/usePostCreateComment"
 import Loader from "../components/loader"
+import CreateUpdateArticleForm from "../components/CreateUpdateArticleForm"
 
 const ArticleDetailPage = () => {
   const { documentId } = useParams<{ documentId: string }>()
@@ -40,9 +41,14 @@ const ArticleDetailPage = () => {
     id: "",
   })
 
-  const { data: articleDetail, isLoading: isLoadingArticleDetail } = useGetArticleDetail({ id: documentId })
+  const { data: articleDetail, isLoading: isLoadingArticleDetail, refetch: refetchArticleDetail } =
+    useGetArticleDetail({ id: documentId })
 
-  const { data: commentList, refetch, isLoading: isLoadingCommentList } = useGetCommentList({
+  const {
+    data: commentList,
+    refetch,
+    isLoading: isLoadingCommentList,
+  } = useGetCommentList({
     params: {
       "sort[0]": "createdAt:desc",
       "populate[article]": "*",
@@ -68,7 +74,7 @@ const ArticleDetailPage = () => {
   const { mutateAsync: createCommentMutation } = usePostCreateComment({
     onSuccess: () => {
       refetch()
-    }
+    },
   })
 
   const handleDeleteArticle = async (documentId: string) => {
@@ -87,8 +93,8 @@ const ArticleDetailPage = () => {
     createCommentMutation({
       data: {
         content: (form.elements[0] as HTMLInputElement).value,
-        article: articleDetail?.data.id as number
-      }
+        article: articleDetail?.data.id as number,
+      },
     }).then(() => form.reset())
   }
 
@@ -110,7 +116,7 @@ const ArticleDetailPage = () => {
 
   return (
     <>
-      {isLoadingArticleDetail || isLoadingCommentList && <Loader />}
+      {(isLoadingArticleDetail || isLoadingCommentList) && <Loader />}
       <div className="container py-8 md:py-12">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6 flex justify-between items-center">
@@ -121,9 +127,16 @@ const ArticleDetailPage = () => {
             </Button>
             <div className="flex items-center gap-2">
               <div className="space-x-2">
-                <Button size="sm" onClick={() => {}}>
-                  <Edit2 className="mr-2 h-4 w-4" /> Edit
-                </Button>
+              <CreateUpdateArticleForm
+                articleToEdit={{
+                  id: articleDetail?.data.documentId || '',
+                  title: articleDetail?.data.title || '',
+                  description: articleDetail?.data.description || '',
+                  category: "",
+                  cover_image_url: articleDetail?.data.cover_image_url,
+                }}
+                onArticleCreated={() => refetchArticleDetail()}
+              />
               </div>
               <div className="space-x-2">
                 <Button
@@ -145,7 +158,10 @@ const ArticleDetailPage = () => {
               <div className="flex items-center text-sm text-muted-foreground space-x-4">
                 <span className="flex items-center">
                   <CalendarDays className="mr-1.5 h-4 w-4" /> Published on{" "}
-                  {articleDetail?.data && new Date(articleDetail?.data?.createdAt).toLocaleDateString()}
+                  {articleDetail?.data &&
+                    new Date(
+                      articleDetail?.data?.createdAt
+                    ).toLocaleDateString()}
                 </span>
               </div>
             </header>
@@ -200,10 +216,7 @@ const ArticleDetailPage = () => {
                     <CardContent className="p-4">
                       <div className="mb-6 flex justify-end items-center gap-2">
                         <div className="space-x-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleEditComment()}
-                          >
+                          <Button size="sm" onClick={() => handleEditComment()}>
                             <Edit2 className="mr-2 h-4 w-4" /> Edit
                           </Button>
                         </div>
@@ -285,7 +298,9 @@ const ArticleDetailPage = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel
-                onClick={() => setIsDeleteCommentOpen({ isOpen: false, id: "" })}
+                onClick={() =>
+                  setIsDeleteCommentOpen({ isOpen: false, id: "" })
+                }
               >
                 Cancel
               </AlertDialogCancel>
