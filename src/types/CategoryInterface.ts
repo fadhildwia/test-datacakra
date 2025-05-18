@@ -8,3 +8,9 @@ export interface CategoryInterface {
   publishedAt: string
   locale: string
 }
+
+export interface BodyCreateCategoryInterface {
+  data: {
+    name: string
+  }
+}
