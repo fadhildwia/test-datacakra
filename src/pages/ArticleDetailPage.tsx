@@ -3,7 +3,6 @@ import { Button } from "../components/ui/button"
 import {
   ArrowLeft,
   CalendarDays,
-  Edit2,
   MessageCircle,
   Trash2,
 } from "lucide-react"
@@ -29,6 +28,7 @@ import useDeleteComment from "../hooks/useDeleteComment"
 import usePostCreateComment from "../hooks/usePostCreateComment"
 import Loader from "../components/loader"
 import CreateUpdateArticleForm from "../components/CreateUpdateArticleForm"
+import CreateUpdateCommentForm from "../components/UpdateCommentForm"
 
 const ArticleDetailPage = () => {
   const { documentId } = useParams<{ documentId: string }>()
@@ -48,6 +48,7 @@ const ArticleDetailPage = () => {
     data: commentList,
     refetch,
     isLoading: isLoadingCommentList,
+    refetch: refetchContentDetail
   } = useGetCommentList({
     params: {
       "sort[0]": "createdAt:desc",
@@ -84,8 +85,6 @@ const ArticleDetailPage = () => {
   const handleDeleteComment = async (documentId: string) => {
     await deleteComment(documentId)
   }
-
-  const handleEditComment = () => {}
 
   const handlePostComment = (e: React.FormEvent) => {
     e.preventDefault()
@@ -216,9 +215,13 @@ const ArticleDetailPage = () => {
                     <CardContent className="p-4">
                       <div className="mb-6 flex justify-end items-center gap-2">
                         <div className="space-x-2">
-                          <Button size="sm" onClick={() => handleEditComment()}>
-                            <Edit2 className="mr-2 h-4 w-4" /> Edit
-                          </Button>
+                          <CreateUpdateCommentForm
+                            commentToEdit={{
+                              id: item?.documentId || '',
+                              content: item?.content || '',
+                            }}
+                            onCommentEdited={() => refetchContentDetail()}
+                          />
                         </div>
                         <div className="space-x-2">
                           <Button
