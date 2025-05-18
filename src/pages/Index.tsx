@@ -19,7 +19,7 @@ export const Index = () => {
           </h1>
           <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
             Explore breathtaking destinations, create unforgettable memories,
-            and let Travel Apps be your guide.
+            and let Travel Articles be your guide.
           </p>
           <Button
             size="lg"
@@ -35,7 +35,7 @@ export const Index = () => {
 
       <section className="py-16 bg-foreground">
         <h2 className="text-3xl font-poppins font-semibold text-center mb-12">
-          Why Choose Travel Apps?
+          Why Choose Travel Articles?
         </h2>
         <div className="grid md:grid-cols-3 gap-8 text-center">
           <div className="p-6">

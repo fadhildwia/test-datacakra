@@ -100,8 +100,9 @@ export const Navbar = () => {
     <header className="sticky top-0 z-50 w-full border-b flex items-center justify-center border-border px-6 sm:px-0 bg-background-foreground/90">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
+          <img src="/datacakra.png" alt="logo" width={50} />
           <span className="text-xl text-primary-foreground font-semibold">
-            Travel Apps
+            Travel Articles
           </span>
         </Link>
 

@@ -55,7 +55,7 @@ const RegisterPage = () => {
           <CardHeader className="text-center">
             <UserPlus className="mx-auto h-10 w-10 text-primary mb-4" />
             <CardTitle className="text-2xl">Create an Account</CardTitle>
-            <CardDescription>Join Travel Apps and start your adventure.</CardDescription>
+            <CardDescription>Join Travel Articles and start your adventure.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleRegister} className="space-y-4">
