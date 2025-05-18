@@ -39,6 +39,7 @@ import {
 import usePutUpdateArticle from "../hooks/usePutUpdateArticle"
 import Loader from "./Loader"
 import usePostUpload from "../hooks/usePostUpload"
+import { Label } from "./ui/label"
 
 interface CreateUpdateArticleFormProps {
   onArticleCreated: () => void
@@ -54,6 +55,7 @@ const CreateUpdateArticleForm: React.FC<CreateUpdateArticleFormProps> = ({
   const [imagePreview, setImagePreview] = React.useState<string | null>(null)
   const [files, setFiles] = React.useState<File | null>(null)
   const [isConvertingImage, setIsConvertingImage] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState('')
 
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
@@ -86,6 +88,10 @@ const CreateUpdateArticleForm: React.FC<CreateUpdateArticleFormProps> = ({
       form.reset()
       setIsOpen(false)
     },
+    onError: (err) => {
+      const error = err?.response?.data?.error.message
+      setErrorMessage(error as string)
+    },
     onSettled: () => setIsLoading(false),
   })
 
@@ -94,6 +100,10 @@ const CreateUpdateArticleForm: React.FC<CreateUpdateArticleFormProps> = ({
       onArticleCreated()
       form.reset()
       setIsOpen(false)
+    },
+    onError: (err) => {
+      const error = err?.response?.data?.error.message
+      setErrorMessage(error as string)
     },
     onSettled: () => setIsLoading(false),
   })
@@ -307,6 +317,11 @@ const CreateUpdateArticleForm: React.FC<CreateUpdateArticleFormProps> = ({
                   </FormItem>
                 )}
               />
+              {errorMessage && (
+                <div>
+                  <Label className="text-destructive">{errorMessage}</Label>
+                </div>
+              )}
               <DialogFooter>
                 <DialogClose asChild>
                   <Button type="button" variant="outline">

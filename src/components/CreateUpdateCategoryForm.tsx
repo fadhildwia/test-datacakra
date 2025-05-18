@@ -94,7 +94,7 @@ const CreateUpdateCategoryForm: React.FC<CreateUpdateCategoryFormProps> = ({ onC
         <DialogTrigger asChild>
           {categoryToEdit ? (
               <Button size="sm">
-                <Edit2 className="mr-2 h-4 w-4" /> Edit Category
+                <Edit2 className="mr-2 h-4 w-4" /> Edit
               </Button>
             ) : (
               <Button 
