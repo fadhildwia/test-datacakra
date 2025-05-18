@@ -11,3 +11,10 @@ export interface ResponseCommentInterface {
   article: string
   user: UserInterface
 }
+
+export interface BodyCommentInterface {
+  data: {
+    content: string
+    article: number
+  }
+}
