@@ -26,13 +26,13 @@ function App() {
               </Layout>
             }
           >
+            <Route path="/" element={<Index />} />
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
 
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Index />} />
               <Route path="/articles" element={<ArticlePage />} />
               <Route path="/articles/:documentId" element={<ArticleDetailPage />} />
               <Route path="/categories" element={<CategoryPage />} />

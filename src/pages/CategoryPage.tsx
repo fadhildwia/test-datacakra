@@ -7,7 +7,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useDeleteCategory from '../hooks/useDeleteCategory';
-import Loader from '../components/loader';
+import Loader from '../components/Loader';
 
 const CategoryPage = () => {
   const navigate = useNavigate()
@@ -36,6 +36,9 @@ const CategoryPage = () => {
       <div className="container py-8 md:py-12">
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground">Article Categories</h1>
+          <p className="text-lg text-muted-foreground mt-2">
+            Explore topics that ignite your travel.
+          </p>
         </div>
         
         <div className="mb-8 flex flex-col sm:flex-row justify-end items-center gap-4">

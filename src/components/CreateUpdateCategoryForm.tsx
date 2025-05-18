@@ -25,7 +25,7 @@ import { Edit2, Plus } from 'lucide-react'
 import { categorySchema, type CategoryFormData } from '../lib/validators/categorySchema'
 import usePostCreateCategory from '../hooks/usePostCreateCategory'
 import usePutUpdateCategory from '../hooks/usePutUpdateCategory'
-import Loader from './loader'
+import Loader from './Loader'
 
 interface CreateUpdateCategoryFormProps {
   onCategoryCreated: () => void

@@ -22,7 +22,7 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 import { Edit2 } from 'lucide-react'
-import Loader from './loader'
+import Loader from './Loader'
 import { commentSchema, type CommentFormData } from '../lib/validators/commentSchema'
 import usePutUpdateComment from '../hooks/usePutUpdateComment'
 

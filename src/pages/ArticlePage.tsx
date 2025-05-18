@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import ArticleCard from "../components/ArticleCard";
 import useGetArticleList from "../hooks/useGetArticleList";
 import CreateUpdateArticleForm from "../components/CreateUpdateArticleForm";
-import Loader from "../components/loader";
+import Loader from "../components/Loader";
 
 export const ArticlePage = () => {
   const [searchTerm, setSearchTerm] = useState("");

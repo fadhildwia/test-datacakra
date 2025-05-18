@@ -14,7 +14,7 @@ import { Label } from "../components/ui/label"
 import useAuthStore from "../store/authStore"
 import usePostUserLogin from "../hooks/usePostLogin"
 import { useEffect } from "react"
-import Loader from "../components/loader"
+import Loader from "../components/Loader"
 
 const LoginPage = () => {
   const navigate = useNavigate()

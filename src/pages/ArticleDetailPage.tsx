@@ -26,7 +26,7 @@ import { useState } from "react"
 import useDeleteArticle from "../hooks/useDeleteArticle"
 import useDeleteComment from "../hooks/useDeleteComment"
 import usePostCreateComment from "../hooks/usePostCreateComment"
-import Loader from "../components/loader"
+import Loader from "../components/Loader"
 import CreateUpdateArticleForm from "../components/CreateUpdateArticleForm"
 import CreateUpdateCommentForm from "../components/UpdateCommentForm"
 

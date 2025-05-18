@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom"
 import usePostUserRegister from "../hooks/usePostRegister"
 import useAuthStore from "../store/authStore"
 import { useEffect } from "react"
-import Loader from "../components/loader"
+import Loader from "../components/Loader"
 
 const RegisterPage = () => {
   const navigate = useNavigate()
