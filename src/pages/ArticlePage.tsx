@@ -4,11 +4,12 @@ import { Button } from "../components/ui/button";
 import { Search } from "lucide-react";
 import ArticleCard from "../components/ArticleCard";
 import useGetArticleList from "../hooks/useGetArticleList";
+import CreateArticleForm from "../components/CreateArticleForm";
 
 export const ArticlePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: statusList } = useGetArticleList({});
+  const { data: articleList, refetch } = useGetArticleList({});
 
   return (
     <div className="container py-8 md:py-12">
@@ -33,11 +34,12 @@ export const ArticlePage = () => {
             <span className="hidden md:inline text-foreground">Search</span>
           </Button>
         </div>
+        <CreateArticleForm onArticleCreated={() => refetch()} />
       </div>
 
-      {statusList?.data?.length ? (
+      {articleList?.data?.length ? (
         <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {statusList?.data.map(item => (
+          {articleList?.data.map(item => (
             <ArticleCard key={item.id} article={item} />
           ))}
         </div>

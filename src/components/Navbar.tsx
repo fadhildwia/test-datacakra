@@ -97,10 +97,10 @@ export const Navbar = () => {
   const closeMobile = () => setMobileOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b flex items-center justify-center border-border px-6 sm:px-0 bg-background-foreground">
+    <header className="sticky top-0 z-50 w-full border-b flex items-center justify-center border-border px-6 sm:px-0 bg-background-foreground/90">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-poppins text-xl text-primary-foreground font-semibold">
+          <span className="text-xl text-primary-foreground font-semibold">
             Travel Apps
           </span>
         </Link>
@@ -121,7 +121,7 @@ export const Navbar = () => {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden absolute top-0 right-0 bg-background-foreground px-4 pb-4 pt-2 space-y-2 animate-in slide-in-from-top-2">
+        <div className="md:hidden absolute top-0 right-0 bg-background-foreground px-4 pb-4 pt-2 space-y-2">
           <div className="grid gap-4 py-6">
             <Link to="/" className="flex items-center gap-2 mb-4"></Link>
             <NavLinks

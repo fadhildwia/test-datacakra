@@ -20,7 +20,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
         />
       </CardHeader>
       <CardContent className="p-6 flex-grow">
-        <CardTitle className="text-xl font-poppins mb-2 leading-tight">
+        <CardTitle className="text-xl mb-2 leading-tight">
           {article.title}
         </CardTitle>
         <p className="text-sm text-muted-foreground mb-3">{new Date(article.createdAt).toLocaleDateString()}</p>

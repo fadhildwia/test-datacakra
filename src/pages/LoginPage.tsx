@@ -17,14 +17,11 @@ import { useEffect } from "react"
 
 const LoginPage = () => {
   const navigate = useNavigate()
-  const { token, setUserAuth, setErrorMessage, setIsLoading, errorMessage } =
+  const { setUserAuth, setErrorMessage, setIsLoading, errorMessage } =
     useAuthStore()
 
   useEffect(() => {
-    const checkToken = async () => {
-      if (token) navigate('/')
-    }
-    checkToken()
+    setErrorMessage(null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -51,11 +48,11 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12 animate-fade-in-up">
+    <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
           <LogIn className="mx-auto h-10 w-10 text-primary mb-4" />
-          <CardTitle className="text-2xl font-poppins">Welcome Back!</CardTitle>
+          <CardTitle className="text-2xl">Welcome Back!</CardTitle>
           <CardDescription>
             Enter your credentials to access your account.
           </CardDescription>

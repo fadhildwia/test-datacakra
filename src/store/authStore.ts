@@ -41,7 +41,7 @@ const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         token: state.token,
         userAuth: state.userAuth,
-        isAuthenticated: true
+        isAuthenticated: state.userAuth ? true : false
       }),
     }
   )

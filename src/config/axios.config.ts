@@ -15,7 +15,9 @@ export const axiosInterceptorRequest = async (requestConfig: InternalAxiosReques
   const parsedState = JSON.parse(storedState);
   const token = parsedState?.state?.token;
 
-  if (requestConfig.headers && token && !requestConfig.url?.includes('/api/auth/local')) {
+  const blacklist = ['/api/auth/local', '/api/auth/local/register']
+
+  if (requestConfig.headers && token && requestConfig.url && !blacklist?.includes(requestConfig.url)) {
     requestConfig.headers.Authorization = `Bearer ${token}`;
   }
 

@@ -9,3 +9,12 @@ export interface ResponseArticleInterface {
   title: string
   updatedAt: string
 }
+
+export interface BodyCreateArticleInterface {
+  data: {
+    title: string
+    description: string
+    cover_image_url: string
+    category: string
+  }
+}
