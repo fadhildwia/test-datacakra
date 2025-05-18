@@ -7,10 +7,11 @@ import { Link, useNavigate } from "react-router-dom"
 import usePostUserRegister from "../hooks/usePostRegister"
 import useAuthStore from "../store/authStore"
 import { useEffect } from "react"
+import Loader from "../components/loader"
 
 const RegisterPage = () => {
   const navigate = useNavigate()
-  const { setUserAuth, setErrorMessage, setIsLoading, errorMessage } =
+  const { setUserAuth, setErrorMessage, isLoading, setIsLoading, errorMessage } =
   useAuthStore()
 
   useEffect(() => {
@@ -47,51 +48,54 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader className="text-center">
-          <UserPlus className="mx-auto h-10 w-10 text-primary mb-4" />
-          <CardTitle className="text-2xl">Create an Account</CardTitle>
-          <CardDescription>Join Travel Apps and start your adventure.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" type="text" placeholder="Your Name" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="you@example.com" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" placeholder="••••••••" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Input id="confirm-password" type="password" placeholder="••••••••" required />
-            </div>
-            {errorMessage && (
-              <div>
-                <Label className="text-destructive">{errorMessage}</Label>
+    <>
+      {isLoading && <Loader />}
+      <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
+        <Card className="w-full max-w-md shadow-xl">
+          <CardHeader className="text-center">
+            <UserPlus className="mx-auto h-10 w-10 text-primary mb-4" />
+            <CardTitle className="text-2xl">Create an Account</CardTitle>
+            <CardDescription>Join Travel Apps and start your adventure.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" type="text" placeholder="Your Name" required />
               </div>
-            )}
-            <Button type="submit" className="w-full text-secondary-foreground">
-              Register
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center text-sm">
-          <p className="text-muted-foreground">
-            Already have an account?{" "}
-            <Button variant="link" asChild className="p-0 h-auto text-primary">
-              <Link to="/login">Login</Link>
-            </Button>
-          </p>
-        </CardFooter>
-      </Card>
-    </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" placeholder="you@example.com" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" type="password" placeholder="••••••••" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Input id="confirm-password" type="password" placeholder="••••••••" required />
+              </div>
+              {errorMessage && (
+                <div>
+                  <Label className="text-destructive">{errorMessage}</Label>
+                </div>
+              )}
+              <Button type="submit" className="w-full text-secondary-foreground">
+                Register
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col items-center text-sm">
+            <p className="text-muted-foreground">
+              Already have an account?{" "}
+              <Button variant="link" asChild className="p-0 h-auto text-primary">
+                <Link to="/login">Login</Link>
+              </Button>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
+    </>
   )
 }
 

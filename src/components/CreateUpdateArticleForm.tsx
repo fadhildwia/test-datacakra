@@ -38,6 +38,7 @@ interface CreateUpdateArticleFormProps {
 const CreateUpdateArticleForm: React.FC<CreateUpdateArticleFormProps> = ({ onArticleCreated, articleToEdit }) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
+
   const form = useForm<ArticleFormData>({
     resolver: zodResolver(articleSchema),
     defaultValues: {
@@ -104,7 +105,7 @@ const CreateUpdateArticleForm: React.FC<CreateUpdateArticleFormProps> = ({ onArt
         <DialogTrigger asChild>
           {articleToEdit ? (
             <Button size="sm">
-              <Edit2 className="mr-2 h-4 w-4" /> Edit
+              <Edit2 className="mr-2 h-4 w-4" /> Edit Article
             </Button>
           ) : (
             <Button 

@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle } from '../components/ui/card'
-import { Edit2, Tag, Trash2 } from 'lucide-react'
+import { Tag, Trash2 } from 'lucide-react'
 import useGetCategoryList from '../hooks/useGetCategoryList';
-import CreateCategoryForm from '../components/CreateCategoryForm';
+import CreateUpdateCategoryForm from '../components/CreateUpdateCategoryForm';
 import { Button } from '../components/ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../components/ui/alert-dialog';
 import { useState } from 'react';
@@ -39,7 +39,7 @@ const CategoryPage = () => {
         </div>
         
         <div className="mb-8 flex flex-col sm:flex-row justify-end items-center gap-4">
-          <CreateCategoryForm onCategoryCreated={() => refetch()} />
+          <CreateUpdateCategoryForm onCategoryCreated={() => refetch()} />
         </div>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
@@ -47,12 +47,13 @@ const CategoryPage = () => {
             <Card key={item.id} className="h-full hover:shadow-lg transition-shadow duration-300 group">
               <div className="flex justify-end items-center gap-2 p-2">
                 <div className="space-x-2">
-                  <Button
-                    size="sm"
-                    onClick={() => {}}
-                  >
-                    <Edit2 className="mr-2 h-4 w-4" /> Edit
-                  </Button>
+                  <CreateUpdateCategoryForm
+                    categoryToEdit={{
+                      id: item.documentId || '',
+                      name: item.name || "",
+                    }}
+                    onCategoryCreated={() => refetch()}
+                  />
                 </div>
                 <div className="space-x-2">
                   <Button
