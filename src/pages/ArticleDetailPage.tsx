@@ -27,6 +27,7 @@ import { useState } from "react"
 import useDeleteArticle from "../hooks/useDeleteArticle"
 import useDeleteComment from "../hooks/useDeleteComment"
 import usePostCreateComment from "../hooks/usePostCreateComment"
+import Loader from "../components/loader"
 
 const ArticleDetailPage = () => {
   const { documentId } = useParams<{ documentId: string }>()
@@ -39,9 +40,9 @@ const ArticleDetailPage = () => {
     id: "",
   })
 
-  const { data: articleDetail } = useGetArticleDetail({ id: documentId })
+  const { data: articleDetail, isLoading: isLoadingArticleDetail } = useGetArticleDetail({ id: documentId })
 
-  const { data: commentList, refetch } = useGetCommentList({
+  const { data: commentList, refetch, isLoading: isLoadingCommentList } = useGetCommentList({
     params: {
       "sort[0]": "createdAt:desc",
       "populate[article]": "*",
@@ -91,7 +92,7 @@ const ArticleDetailPage = () => {
     }).then(() => form.reset())
   }
 
-  if (!articleDetail?.data) {
+  if (!articleDetail?.data && !isLoadingArticleDetail) {
     return (
       <div className="container py-12 text-center">
         <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
@@ -108,194 +109,197 @@ const ArticleDetailPage = () => {
   }
 
   return (
-    <div className="container py-8 md:py-12">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6 flex justify-between items-center">
-          <Button variant="outline" asChild size="sm">
-            <Link to="/articles">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Articles
-            </Link>
-          </Button>
-          <div className="flex items-center gap-2">
-            <div className="space-x-2">
-              <Button size="sm" onClick={() => {}}>
-                <Edit2 className="mr-2 h-4 w-4" /> Edit
-              </Button>
-            </div>
-            <div className="space-x-2">
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => setIsDeleteArticleOpen(true)}
-              >
-                <Trash2 className="mr-2 h-4 w-4" /> Delete
-              </Button>
+    <>
+      {isLoadingArticleDetail || isLoadingCommentList && <Loader />}
+      <div className="container py-8 md:py-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6 flex justify-between items-center">
+            <Button variant="outline" asChild size="sm">
+              <Link to="/articles">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Articles
+              </Link>
+            </Button>
+            <div className="flex items-center gap-2">
+              <div className="space-x-2">
+                <Button size="sm" onClick={() => {}}>
+                  <Edit2 className="mr-2 h-4 w-4" /> Edit
+                </Button>
+              </div>
+              <div className="space-x-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setIsDeleteArticleOpen(true)}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" /> Delete
+                </Button>
+              </div>
             </div>
           </div>
+
+          <article>
+            <header className="mb-8">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+                {articleDetail?.data.title}
+              </h1>
+              <div className="flex items-center text-sm text-muted-foreground space-x-4">
+                <span className="flex items-center">
+                  <CalendarDays className="mr-1.5 h-4 w-4" /> Published on{" "}
+                  {articleDetail?.data && new Date(articleDetail?.data?.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+            </header>
+
+            <img
+              src={articleDetail?.data.cover_image_url}
+              alt={articleDetail?.data.title}
+              className="w-full h-auto md:h-[400px] object-cover rounded-lg mb-8 shadow-lg"
+            />
+
+            <div className="text-background/90 text-left">
+              <p className="text-lg mb-6">{articleDetail?.data.description}</p>
+            </div>
+          </article>
+
+          <section className="mt-12 pt-8 border-t">
+            <h2 className="text-2xl font-semibold mb-6 flex items-center">
+              <MessageCircle className="mr-3 h-6 w-6 text-primary" /> Comments (
+              {
+                commentList?.data.filter(
+                  (filterItem) => filterItem.user.id === userAuth?.id
+                )?.length
+              }
+              )
+            </h2>
+
+            <Card className="mb-8 bg-slate-50 text-left">
+              <CardHeader>
+                <CardTitle className="text-xl">Leave a Comment</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handlePostComment} className="space-y-4">
+                  <Label htmlFor="commentText">Your Comment</Label>
+                  <Textarea
+                    id="commentText"
+                    placeholder="Write your comment here..."
+                    required
+                    rows={4}
+                  />
+                  <Button type="submit" variant="secondary">
+                    Post Comment
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-6">
+              {commentList?.data
+                .filter((filterItem) => filterItem.user.id === userAuth?.id)
+                .map((item) => (
+                  <Card key={item.id} className="shadow-sm">
+                    <CardContent className="p-4">
+                      <div className="mb-6 flex justify-end items-center gap-2">
+                        <div className="space-x-2">
+                          <Button
+                            size="sm"
+                            onClick={() => handleEditComment()}
+                          >
+                            <Edit2 className="mr-2 h-4 w-4" /> Edit
+                          </Button>
+                        </div>
+                        <div className="space-x-2">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() =>
+                              setIsDeleteCommentOpen({
+                                isOpen: true,
+                                id: item.documentId,
+                              })
+                            }
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center mb-1">
+                        <p className="font-semibold text-sm text-primary">
+                          {item?.user?.username}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <p className="text-sm text-left text-primary-foreground">
+                        {item.content}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              {commentList?.data.length === 0 && (
+                <p className="text-muted-foreground text-center py-4">
+                  Be the first to comment!
+                </p>
+              )}
+            </div>
+          </section>
         </div>
 
-        <article>
-          <header className="mb-8">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-              {articleDetail.data.title}
-            </h1>
-            <div className="flex items-center text-sm text-muted-foreground space-x-4">
-              <span className="flex items-center">
-                <CalendarDays className="mr-1.5 h-4 w-4" /> Published on{" "}
-                {new Date(articleDetail.data.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-          </header>
+        <AlertDialog
+          open={isDeleteArticleOpen}
+          onOpenChange={setIsDeleteArticleOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete the article
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setIsDeleteArticleOpen(false)}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => handleDeleteArticle(documentId as string)}
+                className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+              >
+                Yes, delete article
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
-          <img
-            src={articleDetail.data.cover_image_url}
-            alt={articleDetail.data.title}
-            className="w-full h-auto md:h-[400px] object-cover rounded-lg mb-8 shadow-lg"
-          />
-
-          <div className="text-background/90 text-left">
-            <p className="text-lg mb-6">{articleDetail.data.description}</p>
-          </div>
-        </article>
-
-        <section className="mt-12 pt-8 border-t">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center">
-            <MessageCircle className="mr-3 h-6 w-6 text-primary" /> Comments (
-            {
-              commentList?.data.filter(
-                (filterItem) => filterItem.user.id === userAuth?.id
-              )?.length
-            }
-            )
-          </h2>
-
-          <Card className="mb-8 bg-slate-50 text-left">
-            <CardHeader>
-              <CardTitle className="text-xl">Leave a Comment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handlePostComment} className="space-y-4">
-                <Label htmlFor="commentText">Your Comment</Label>
-                <Textarea
-                  id="commentText"
-                  placeholder="Write your comment here..."
-                  required
-                  rows={4}
-                />
-                <Button type="submit" variant="secondary">
-                  Post Comment
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          <div className="space-y-6">
-            {commentList?.data
-              .filter((filterItem) => filterItem.user.id === userAuth?.id)
-              .map((item) => (
-                <Card key={item.id} className="shadow-sm">
-                  <CardContent className="p-4">
-                    <div className="mb-6 flex justify-end items-center gap-2">
-                      <div className="space-x-2">
-                        <Button
-                          size="sm"
-                          onClick={() => handleEditComment()}
-                        >
-                          <Edit2 className="mr-2 h-4 w-4" /> Edit
-                        </Button>
-                      </div>
-                      <div className="space-x-2">
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() =>
-                            setIsDeleteCommentOpen({
-                              isOpen: true,
-                              id: item.documentId,
-                            })
-                          }
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center mb-1">
-                      <p className="font-semibold text-sm text-primary">
-                        {item?.user?.username}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(item.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <p className="text-sm text-left text-primary-foreground">
-                      {item.content}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            {commentList?.data.length === 0 && (
-              <p className="text-muted-foreground text-center py-4">
-                Be the first to comment!
-              </p>
-            )}
-          </div>
-        </section>
+        <AlertDialog
+          open={isDeleteCommentOpen.isOpen}
+          onOpenChange={(data) =>
+            setIsDeleteCommentOpen({ isOpen: data, id: "" })
+          }
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete the comment
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                onClick={() => setIsDeleteCommentOpen({ isOpen: false, id: "" })}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => handleDeleteComment(isDeleteCommentOpen.id)}
+                className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+              >
+                Yes, delete comment
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
-
-      <AlertDialog
-        open={isDeleteArticleOpen}
-        onOpenChange={setIsDeleteArticleOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the article
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsDeleteArticleOpen(false)}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => handleDeleteArticle(documentId as string)}
-              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-            >
-              Yes, delete article
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog
-        open={isDeleteCommentOpen.isOpen}
-        onOpenChange={(data) =>
-          setIsDeleteCommentOpen({ isOpen: data, id: "" })
-        }
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the comment
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => setIsDeleteCommentOpen({ isOpen: false, id: "" })}
-            >
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => handleDeleteComment(isDeleteCommentOpen.id)}
-              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-            >
-              Yes, delete comment
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+    </>
   )
 }
 

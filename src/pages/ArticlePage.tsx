@@ -5,49 +5,53 @@ import { Search } from "lucide-react";
 import ArticleCard from "../components/ArticleCard";
 import useGetArticleList from "../hooks/useGetArticleList";
 import CreateArticleForm from "../components/CreateArticleForm";
+import Loader from "../components/loader";
 
 export const ArticlePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: articleList, refetch } = useGetArticleList({});
+  const { data: articleList, refetch, isLoading } = useGetArticleList({});
 
   return (
-    <div className="container py-8 md:py-12">
-      <div className="text-center mb-10 md:mb-16">
-        <h1 className="text-3xl md:text-4xl text-primary-foreground font-bold">Travel Articles</h1>
-        <p className="text-lg mt-2">
-          Inspiration for your next journey.
-        </p>
-      </div>
-
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div className="flex w-full sm:w-auto sm:max-w-lg items-center space-x-2 flex-grow">
-          <Input
-            type="text" 
-            placeholder="Search articles..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-grow"
-          />
-          <Button type="button" onClick={() => {}}>
-            <Search className="h-4 w-4 md:mr-2 text-foreground" />
-            <span className="hidden md:inline text-foreground">Search</span>
-          </Button>
+    <>
+      {isLoading && <Loader />}
+      <div className="container py-8 md:py-12">
+        <div className="text-center mb-10 md:mb-16">
+          <h1 className="text-3xl md:text-4xl text-primary-foreground font-bold">Travel Articles</h1>
+          <p className="text-lg mt-2">
+            Inspiration for your next journey.
+          </p>
         </div>
-        <CreateArticleForm onArticleCreated={() => refetch()} />
-      </div>
 
-      {articleList?.data?.length ? (
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {articleList?.data.map(item => (
-            <ArticleCard key={item.id} article={item} />
-          ))}
+        <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex w-full sm:w-auto sm:max-w-lg items-center space-x-2 flex-grow">
+            <Input
+              type="text" 
+              placeholder="Search articles..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-grow"
+            />
+            <Button type="button" onClick={() => {}}>
+              <Search className="h-4 w-4 md:mr-2 text-foreground" />
+              <span className="hidden md:inline text-foreground">Search</span>
+            </Button>
+          </div>
+          <CreateArticleForm onArticleCreated={() => refetch()} />
         </div>
-      ) : (
-        <p className="text-center text-muted-foreground py-10">
-          {searchTerm ? "No articles found matching your search." : "No articles yet. Be the first to create one!"}
-        </p>
-      )}
-    </div>
+
+        {articleList?.data?.length ? (
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {articleList?.data.map(item => (
+              <ArticleCard key={item.id} article={item} />
+            ))}
+          </div>
+        ) : !isLoading && (
+          <p className="text-center text-muted-foreground py-10">
+            {searchTerm ? "No articles found matching your search." : "No articles yet. Be the first to create one!"}
+          </p>
+        )}
+      </div>
+    </>
   )
 }

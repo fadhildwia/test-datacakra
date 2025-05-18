@@ -14,10 +14,11 @@ import { Label } from "../components/ui/label"
 import useAuthStore from "../store/authStore"
 import usePostUserLogin from "../hooks/usePostLogin"
 import { useEffect } from "react"
+import Loader from "../components/loader"
 
 const LoginPage = () => {
   const navigate = useNavigate()
-  const { setUserAuth, setErrorMessage, setIsLoading, errorMessage } =
+  const { setUserAuth, setErrorMessage, isLoading, setIsLoading, errorMessage } =
     useAuthStore()
 
   useEffect(() => {
@@ -48,55 +49,58 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader className="text-center">
-          <LogIn className="mx-auto h-10 w-10 text-primary mb-4" />
-          <CardTitle className="text-2xl">Welcome Back!</CardTitle>
-          <CardDescription>
-            Enter your credentials to access your account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            {errorMessage && (
-              <div>
-                <Label className="text-destructive">{errorMessage}</Label>
+    <>
+      {isLoading && <Loader />}
+      <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
+        <Card className="w-full max-w-md shadow-xl">
+          <CardHeader className="text-center">
+            <LogIn className="mx-auto h-10 w-10 text-primary mb-4" />
+            <CardTitle className="text-2xl">Welcome Back!</CardTitle>
+            <CardDescription>
+              Enter your credentials to access your account.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                />
               </div>
-            )}
-            <Button type="submit" className="w-full text-secondary-foreground">
-              Login
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center text-sm">
-          <p className="text-muted-foreground">
-            Don't have an account?{" "}
-            <Button variant="link" asChild className="p-0 h-auto text-primary">
-              <Link to="/register">Register</Link>
-            </Button>
-          </p>
-        </CardFooter>
-      </Card>
-    </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+              {errorMessage && (
+                <div>
+                  <Label className="text-destructive">{errorMessage}</Label>
+                </div>
+              )}
+              <Button type="submit" className="w-full text-secondary-foreground">
+                Login
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col items-center text-sm">
+            <p className="text-muted-foreground">
+              Don't have an account?{" "}
+              <Button variant="link" asChild className="p-0 h-auto text-primary">
+                <Link to="/register">Register</Link>
+              </Button>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
+    </>
   )
 }
 
