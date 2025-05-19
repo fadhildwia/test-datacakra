@@ -1,17 +1,10 @@
 import { useParams, Link, useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
-import {
-  ArrowLeft,
-  CalendarDays,
-  MessageCircle,
-  Trash2,
-} from "lucide-react"
+import { ArrowLeft, CalendarDays, MessageCircle, Trash2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Label } from "../components/ui/label"
 import { Textarea } from "../components/ui/textarea"
 import useGetArticleDetail from "../hooks/useGetArticleDetail"
-import useGetCommentList from "../hooks/useGetCommentList"
-import useAuthStore from "../store/authStore"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +26,6 @@ import CreateUpdateCommentForm from "../components/UpdateCommentForm"
 const ArticleDetailPage = () => {
   const { documentId } = useParams<{ documentId: string }>()
   const navigate = useNavigate()
-  const { userAuth } = useAuthStore()
 
   const [isDeleteArticleOpen, setIsDeleteArticleOpen] = useState(false)
   const [isDeleteCommentOpen, setIsDeleteCommentOpen] = useState({
@@ -41,21 +33,13 @@ const ArticleDetailPage = () => {
     id: "",
   })
 
-  const { data: articleDetail, isLoading: isLoadingArticleDetail, refetch: refetchArticleDetail } =
-    useGetArticleDetail({ id: documentId })
-
   const {
-    data: commentList,
-    refetch,
-    isLoading: isLoadingCommentList,
-    refetch: refetchContentDetail
-  } = useGetCommentList({
-    params: {
-      "sort[0]": "createdAt:desc",
-      "populate[article]": "*",
-      "populate[user]": "*",
-      "pagination[pageSize]": "400",
-    },
+    data: articleDetail,
+    isLoading: isLoadingArticleDetail,
+    refetch: refetchArticleDetail,
+  } = useGetArticleDetail({
+    id: documentId,
+    params: { "populate[comments][populate][user]": "*" },
   })
 
   const { mutate: deleteArticle } = useDeleteArticle({
@@ -68,13 +52,13 @@ const ArticleDetailPage = () => {
   const { mutate: deleteComment } = useDeleteComment({
     onSuccess: async () => {
       setIsDeleteCommentOpen({ isOpen: false, id: "" })
-      refetch()
+      refetchArticleDetail()
     },
   })
 
   const { mutateAsync: createCommentMutation } = usePostCreateComment({
     onSuccess: () => {
-      refetch()
+      refetchArticleDetail()
     },
   })
 
@@ -115,7 +99,7 @@ const ArticleDetailPage = () => {
 
   return (
     <>
-      {(isLoadingArticleDetail || isLoadingCommentList) && <Loader />}
+      {isLoadingArticleDetail && <Loader />}
       <div className="container py-8 md:py-12">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6 flex justify-between items-center">
@@ -126,16 +110,16 @@ const ArticleDetailPage = () => {
             </Button>
             <div className="flex items-center gap-2">
               <div className="space-x-2">
-              <CreateUpdateArticleForm
-                articleToEdit={{
-                  id: articleDetail?.data.documentId || '',
-                  title: articleDetail?.data.title || '',
-                  description: articleDetail?.data.description || '',
-                  category: "",
-                  cover_image_url: articleDetail?.data.cover_image_url,
-                }}
-                onArticleCreated={() => refetchArticleDetail()}
-              />
+                <CreateUpdateArticleForm
+                  articleToEdit={{
+                    id: articleDetail?.data.documentId || "",
+                    title: articleDetail?.data.title || "",
+                    description: articleDetail?.data.description || "",
+                    category: "",
+                    cover_image_url: articleDetail?.data.cover_image_url,
+                  }}
+                  onArticleCreated={() => refetchArticleDetail()}
+                />
               </div>
               <div className="space-x-2">
                 <Button
@@ -179,12 +163,7 @@ const ArticleDetailPage = () => {
           <section className="mt-12 pt-8 border-t">
             <h2 className="text-2xl font-semibold mb-6 flex items-center">
               <MessageCircle className="mr-3 h-6 w-6 text-primary" /> Comments (
-              {
-                commentList?.data.filter(
-                  (filterItem) => filterItem.user.id === userAuth?.id
-                )?.length
-              }
-              )
+              {articleDetail?.data?.comments?.length})
             </h2>
 
             <Card className="mb-8 bg-slate-50 text-left">
@@ -208,51 +187,49 @@ const ArticleDetailPage = () => {
             </Card>
 
             <div className="space-y-6">
-              {commentList?.data
-                .filter((filterItem) => filterItem.user.id === userAuth?.id)
-                .map((item) => (
-                  <Card key={item.id} className="shadow-sm">
-                    <CardContent className="p-4">
-                      <div className="mb-6 flex justify-end items-center gap-2">
-                        <div className="space-x-2">
-                          <CreateUpdateCommentForm
-                            commentToEdit={{
-                              id: item?.documentId || '',
-                              content: item?.content || '',
-                            }}
-                            onCommentEdited={() => refetchContentDetail()}
-                          />
-                        </div>
-                        <div className="space-x-2">
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() =>
-                              setIsDeleteCommentOpen({
-                                isOpen: true,
-                                id: item.documentId,
-                              })
-                            }
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                          </Button>
-                        </div>
+              {articleDetail?.data?.comments?.map((item) => (
+                <Card key={item.id} className="shadow-sm">
+                  <CardContent className="p-4">
+                    <div className="mb-6 flex justify-end items-center gap-2">
+                      <div className="space-x-2">
+                        <CreateUpdateCommentForm
+                          commentToEdit={{
+                            id: item?.documentId || "",
+                            content: item?.content || "",
+                          }}
+                          onCommentEdited={() => refetchArticleDetail()}
+                        />
                       </div>
-                      <div className="flex justify-between items-center mb-1">
-                        <p className="font-semibold text-sm text-primary">
-                          {item?.user?.username}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(item.createdAt).toLocaleDateString()}
-                        </p>
+                      <div className="space-x-2">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() =>
+                            setIsDeleteCommentOpen({
+                              isOpen: true,
+                              id: item.documentId,
+                            })
+                          }
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        </Button>
                       </div>
-                      <p className="text-sm text-left text-primary-foreground">
-                        {item.content}
+                    </div>
+                    <div className="flex justify-between items-center mb-1">
+                      <p className="font-semibold text-sm text-primary">
+                        {item?.user?.username}
                       </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              {commentList?.data.length === 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(item.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <p className="text-sm text-left text-primary-foreground">
+                      {item.content}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+              {articleDetail?.data?.comments?.length === 0 && (
                 <p className="text-muted-foreground text-center py-4">
                   Be the first to comment!
                 </p>

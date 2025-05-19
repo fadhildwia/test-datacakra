@@ -1,3 +1,5 @@
+import type { ResponseCommentInterface } from "./CommentInterface"
+
 export interface ResponseArticleInterface {
   cover_image_url: string
   createdAt: string
@@ -8,6 +10,7 @@ export interface ResponseArticleInterface {
   publishedAt: string
   title: string
   updatedAt: string
+  comments?: Array<ResponseCommentInterface>
 }
 
 export interface BodyCreateArticleInterface {

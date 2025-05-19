@@ -2,7 +2,9 @@ type SortingType = 'asc' | 'desc';
 
 interface APIResponse<D> {
   data: D;
-  meta?: MetaResponseInterface;
+  meta?: {
+    pagination: MetaResponseInterface
+  };
 }
 
 interface MetaResponseInterface {

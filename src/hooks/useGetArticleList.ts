@@ -1,15 +1,48 @@
-import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
+import { useInfiniteQuery } from "@tanstack/react-query"
 import { axiosInstance } from "../config/axios.config"
-import type { ResponseArticleInterface } from "../types/ArticleInterface"
 
-export const getArticleList = async (): Promise<APIResponse<Array<ResponseArticleInterface>>> =>
-  await axiosInstance.get('/api/articles').then(({ data }) => data)
+interface ParamsGetArticleListInterface {
+  "pagination[page]": number
+  "pagination[pageSize]": number
+}
 
-const useGetArticleList = ({ options }: { options?: UseQueryOptions<APIResponse<Array<ResponseArticleInterface>>> }) => {
-  return useQuery<APIResponse<Array<ResponseArticleInterface>>>({
-    queryKey: ['useGetArticleList'],
-    queryFn: () => getArticleList(),
-    ...options,
+export const getArticleList = async ({
+  params,
+}: {
+  params: ParamsGetArticleListInterface
+}) => {
+  const filteredObject = Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value !== "")
+  )
+
+  const { data } = await axiosInstance.get("/api/articles", {
+    params: filteredObject,
+  })
+
+  return data
+}
+
+const useGetArticleList = ({
+  params,
+}: {
+  params: ParamsGetArticleListInterface
+}) => {
+  return useInfiniteQuery({
+    queryKey: ["useInfiniteArticleList", params],
+    queryFn: async ({ pageParam = 1 }) => {
+      return getArticleList({
+        params: {
+          ...params,
+          "pagination[page]": Number(pageParam),
+        },
+      })
+    },
+    getNextPageParam: (lastPage) => {
+      const currentPage = lastPage.meta?.pagination?.page ?? 1
+      const totalPages = lastPage.meta?.pagination?.pageCount ?? 1
+      return currentPage < totalPages ? currentPage + 1 : undefined
+    },
+    initialPageParam: 1,
   })
 }
 
