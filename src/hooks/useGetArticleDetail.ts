@@ -4,6 +4,7 @@ import type { ResponseArticleInterface } from "../types/ArticleInterface"
 
 interface ParamsGetArticleDetailInterface {
   "populate[comments][populate][user]": string
+  "populate[category]": string
 }
 
 export const getArticleDetail = async ({

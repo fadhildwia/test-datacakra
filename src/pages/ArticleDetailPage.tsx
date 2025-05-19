@@ -39,7 +39,10 @@ const ArticleDetailPage = () => {
     refetch: refetchArticleDetail,
   } = useGetArticleDetail({
     id: documentId,
-    params: { "populate[comments][populate][user]": "*" },
+    params: {
+      "populate[comments][populate][user]": "*",
+      "populate[category]": "*",
+    },
   })
 
   const { mutate: deleteArticle } = useDeleteArticle({
@@ -115,7 +118,7 @@ const ArticleDetailPage = () => {
                     id: articleDetail?.data.documentId || "",
                     title: articleDetail?.data.title || "",
                     description: articleDetail?.data.description || "",
-                    category: "",
+                    category: articleDetail?.data.category?.documentId || "",
                     cover_image_url: articleDetail?.data.cover_image_url,
                   }}
                   onArticleCreated={() => refetchArticleDetail()}

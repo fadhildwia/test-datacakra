@@ -1,3 +1,4 @@
+import type { CategoryInterface } from "./CategoryInterface"
 import type { ResponseCommentInterface } from "./CommentInterface"
 
 export interface ResponseArticleInterface {
@@ -11,6 +12,7 @@ export interface ResponseArticleInterface {
   title: string
   updatedAt: string
   comments?: Array<ResponseCommentInterface>
+  category?: CategoryInterface
 }
 
 export interface BodyCreateArticleInterface {
