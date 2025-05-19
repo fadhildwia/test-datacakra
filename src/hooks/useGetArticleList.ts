@@ -4,6 +4,7 @@ import { axiosInstance } from "../config/axios.config"
 interface ParamsGetArticleListInterface {
   "pagination[page]": number
   "pagination[pageSize]": number
+  "filters[title][$containsi]"?: string
 }
 
 export const getArticleList = async ({

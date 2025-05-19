@@ -9,6 +9,17 @@ import Loader from "../components/Loader"
 
 export const ArticlePage = () => {
   const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm)
+    }, 500)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [searchTerm])
 
   const {
     data: articleList,
@@ -20,6 +31,7 @@ export const ArticlePage = () => {
     params: {
       "pagination[page]": 1,
       "pagination[pageSize]": 10,
+      "filters[title][$containsi]": debouncedSearch
     },
   })
 
